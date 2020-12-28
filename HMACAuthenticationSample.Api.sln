@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HMACAuthenticationSample.Api", "HMACAuthenticationSample.Api\HMACAuthenticationSample.Api.csproj", "{F116AB07-CAE4-4984-9578-0C557D2EB6D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HMACAuthenticationSample.Client", "HMACAuthenticationSample.Client\HMACAuthenticationSample.Client.csproj", "{D8E7FCAA-51B5-4B00-A853-8730E7FBE106}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F116AB07-CAE4-4984-9578-0C557D2EB6D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F116AB07-CAE4-4984-9578-0C557D2EB6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F116AB07-CAE4-4984-9578-0C557D2EB6D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F116AB07-CAE4-4984-9578-0C557D2EB6D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8E7FCAA-51B5-4B00-A853-8730E7FBE106}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8E7FCAA-51B5-4B00-A853-8730E7FBE106}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8E7FCAA-51B5-4B00-A853-8730E7FBE106}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8E7FCAA-51B5-4B00-A853-8730E7FBE106}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0957A0FD-593A-4D05-893A-7164C392FADD}
+	EndGlobalSection
+EndGlobal
