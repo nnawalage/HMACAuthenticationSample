@@ -75,14 +75,6 @@ namespace HMACAuthenticationSample.Api.Filters
                         principal = new GenericPrincipal(new GenericIdentity(appId), null);
                     }
                 }
-                else
-                {
-                    throw new Exception("Hmac Authorization failed: Authorization header format is incorrect");
-                }
-            }
-            else
-            {
-                throw new Exception("Hmac Authorization failed: Issue with Authorization header.");
             }
             return principal;
         }
