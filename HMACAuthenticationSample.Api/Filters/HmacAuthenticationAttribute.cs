@@ -98,42 +98,38 @@ namespace HMACAuthenticationSample.Api.Filters
         private bool IsAuthenticated(HttpRequestMessage request, string appId, string requestSignature, string nonce, string requestTimeStamp)
         {
             bool isAuthenticated = false;
-            //check if appId is valid 
-            if (appId.Equals(ConfigurationManager.AppSettings["appId"]))
+            //check if  request is not a replay attack
+            if (!IsReplayRequest(appId, nonce, requestTimeStamp))
             {
-                //check if  request is not a replay attack
-                if (!IsReplayRequest(appId, nonce, requestTimeStamp))
+                //compute signature to match with request signature
+                //hash  request content
+                string contentJson = request.Content.ReadAsStringAsync().Result;
+                byte[] contentHash = GetSHA256Hash(contentJson);
+                //get Base64 string from the content if hash is not null.
+                string requestContent = contentHash != null ? Convert.ToBase64String(contentHash) : string.Empty;
+                //get the request uri in lower case
+                string requestUri = request.RequestUri.AbsoluteUri.ToLower();
+                //get the request method (GET/POST etc..)
+                string requestHttpMethod = request.Method.Method.ToUpper();
+                //populate the string to be converted to signature
+                //should contain appId, requestHttpMethod, requestUri, requestTimeStamp, nonce and request content in the given order
+                string signatureData = $"{appId}{requestHttpMethod}{requestUri}{requestTimeStamp}{nonce}{requestContent}";
+                //get the signature data in bytes
+                byte[] signatureDataBytes = Encoding.UTF8.GetBytes(signatureData);
+                //get the secret key
+                string secretKey = ConfigurationManager.AppSettings["appSecret"];
+                //get the secret key in bytes
+                byte[] secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+                //compute hmac hash using the secret key
+                using (HMACSHA256 hmac = new HMACSHA256(secretKeyBytes))
                 {
-                    //compute signature to match with request signature
-                    //hash  request content
-                    string contentJson = request.Content.ReadAsStringAsync().Result;
-                    byte[] contentHash = GetSHA256Hash(contentJson);
-                    //get Base64 string from the content if hash is not null.
-                    string requestContent = contentHash != null ? Convert.ToBase64String(contentHash) : string.Empty;
-                    //get the request uri in lower case
-                    string requestUri = request.RequestUri.AbsoluteUri.ToLower();
-                    //get the request method (GET/POST etc..)
-                    string requestHttpMethod = request.Method.Method.ToUpper();
-                    //populate the string to be converted to signature
-                    //should contain appId, requestHttpMethod, requestUri, requestTimeStamp, nonce and request content in the given order
-                    string signatureData = $"{appId}{requestHttpMethod}{requestUri}{requestTimeStamp}{nonce}{requestContent}";
-                    //get the signature data in bytes
-                    byte[] signatureDataBytes = Encoding.UTF8.GetBytes(signatureData);
-                    //get the secret key
-                    string secretKey = ConfigurationManager.AppSettings["appSecret"];
-                    //get the secret key in bytes
-                    byte[] secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
-                    //compute hmac hash using the secret key
-                    using (HMACSHA256 hmac = new HMACSHA256(secretKeyBytes))
+                    byte[] computedSignatureHash = hmac.ComputeHash(signatureDataBytes);
+                    string serverSignatire = Convert.ToBase64String(computedSignatureHash);
+                    //check computed signature hash and request signature are equal
+                    if (serverSignatire.Equals(requestSignature, StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] computedSignatureHash = hmac.ComputeHash(signatureDataBytes);
-                        string serverSignatire = Convert.ToBase64String(computedSignatureHash);
-                        //check computed signature hash and request signature are equal
-                        if (serverSignatire.Equals(requestSignature, StringComparison.OrdinalIgnoreCase))
-                        {
-                            //hases are matching
-                            isAuthenticated = true;
-                        }
+                        //hases are matching
+                        isAuthenticated = true;
                     }
                 }
             }
